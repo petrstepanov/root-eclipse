@@ -17,7 +17,7 @@ OBJ_DIR=build
 BIN_DIR=dist
 
 # Set the name of your executable
-APP_NAME=root-eclipse
+APP_NAME=root-app-gnu-make
 
 # Set variables with dictionary .cxx and .pcm filenames 
 DICT_CXX_FILENAME=$(APP_NAME)-dictionary.cxx        # app-dictionary.cxx
