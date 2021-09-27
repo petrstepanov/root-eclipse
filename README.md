@@ -17,19 +17,27 @@ Similarities between RHEL, CentOS and Fedora strongly point towards selecting Fe
 
 I highly encourage everyone to build ROOT on their personal computer from source. This way many potential issues can be eliminated: mismatch between compiler versions and Python versions installed on your local computer. When compiling ROOT from source, it is possible to turn on a few optional features that are not available in the pre-compiled executable version. Finally, any serious development requires debugging functionality which is only possible when compiling ROOT from source.
 
-Scripts that install most recent CERN ROOT version on Fedora linux [can be found here](https://github.com/petrstepanov/fedora-scripts). Scripts builds ROOT with debug symbols and all options turned on. Geant4 is built with debug symbols and most common options. Installation instructions are following:
+Scripts that install build CERN ROOT with debug symbols and all options turned on can be found below. ROOT framework can be installed on pretty much any OS. However, prerequisities -- required list of libraries and their names vary depending on the specific Linux distribution used. I created two versions of scripts that will work for two common personal linux distribution families: Ubuntu-based linux systems and Fedora distributions. Installation instructions are following:
+
 ```
 mkdir -p ~/Downloads && cd ~/Downloads
-git clone https://github.com/petrstepanov/fedora-scripts && cd ~/Downloads
-chmod +x install-root-latest.sh
-sh ./install-root-latest.sh
+
+# For Ubuntu-based systems use:
+wget -O install-root-latest.sh https://raw.githubusercontent.com/petrstepanov/ubuntu-scripts/main/install-root-latest.sh
+
+# For Fedora linux use:
+wget -O install-root-latest.sh https://raw.githubusercontent.com/petrstepanov/fedora-scripts/main/install-root-latest.sh
+
+# Execute lines below:
+chmod +x ./install-root-latest.sh
+./install-root-latest.sh
 ```
 
-Scripts locate the latest ROOT and Geant versions on the CERN servers, download the framework source code to corresponding `~/Source/` folder, satisfyes the dependencies, build the frameworks, installs binaries in `~/Applications/` folder and sets up the environment variables.
+If using other linux distribution, refer to the [list of the ROOT dependencies](https://root.cern/install/dependencies/) which I updated and tested on the most popular recent Linux distributions.
 
-Feel free to reach out to [Petr Stepanov](https://github.com/petrstepanov/) with respect to the scripts issues. Find more information about compilation of CERN ROOT from source [here](https://root.cern/install/build_from_source/).
+Above scripts locate the latest ROOT and Geant versions on the CERN servers, download the framework source code to corresponding `~/Source/` folder, satisfy the dependencies, build the ROOT framework with debug symbols with the most common options turned on, install binaries in `~/Applications/` folder and set up necessary environment variables.
 
-ROOT frameworkcan be installed on pretty much any OS. However, prerequisities -- required list of libraries and their names vary depending on the specific Linux distribution used. If you are using other distribution than Fedora, refer to the [list of the ROOT dependencies](https://root.cern/install/dependencies/) which I have updated and tested on the most popular recent Linux distributions.
+Feel free to reach out to [Petr Stepanov](https://github.com/petrstepanov/) with respect to any issues with the script (or open an Issue in corresponding GitHub repo). Find more information about compilation of CERN ROOT from source [here](https://root.cern/install/build_from_source/).
 
 ## CMake approach
 CMake option comes with benefits. CMake can automatically generate cross-platform makefiles, detect external libraries. In particular CMake can pcreate a project structure that can be later opened in IDE of your choice (Eclipse, Visual Studio,…). Then you can enjoy such features like code autocompletion, hilighting and debugging.
@@ -41,31 +49,29 @@ First, install Eclipse IDE. This process is documented in the [Chapter 6 of my d
 mkdir -p ~/Development && cd ~/Development
 git clone https://github.com/petrstepanov/root-eclipse
 ```
-The out-of-source project generator build is initiated via following command:
+
+**Extensive debugging requires accessing ROOT source files in Eclipse project**. In order to access the ROOT source files in Eclipse project it is important to create a symlink under project's `src` folder pointing to the CERN ROOT source files [before building with CMake](https://stackoverflow.com/questions/48509911/cmake-add-subdirectory-vs-include). I outlined a good approach of consolidating CERN ROOT source files from the original ROOT tarball archive [here](https://github.com/petrstepanov/fedora-scripts/blob/main/copy-root-sources.sh). This will work out of the box if you installed ROOT with my scripts above:
 ```
+cd ~/Downloads
+wget -O copy-root-sources.sh https://raw.githubusercontent.com/petrstepanov/fedora-scripts/main/copy-root-sources.sh
+chmod +x ./copy-root-sources.sh
+./copy-root-sources.sh
+```
+
+Above code will copy all ROOT sources under `~/Source/root-sources`. Next we symlink them under our the project's `src` folder:
+
+```
+ln -s ~/Source/root-sources/ ~/Development/root-eclipse/src/root-sources
+```
+
+The out-of-source project generator build is carried out in separate folder located outside of the actual project Git tree. For example, we will create a `root-eclipse-project` folder. Build is initinitiated via following command:
+```
+cd ~/Development
 mkdir root-eclipse-project && cd root-eclipse-project
 cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../root-eclipse
 ```
-Cmake will create an Eclipse project and will link ROOT (and Geant4) includes (header files) into the project. However **extensive debugging requires access to ROOT source files**. An effective way of linking ROOT and Geant4 framework source files to Eclipse project is following:
-* Copy all ROOT source files in a same parent folder without nested directory structure. This greatly improves Eclipse indexing speed.
-* Create a symlink to this folder in `eclipse` project folder.
-* In Eclipse mark above symlink as *Source Folder*.
 
-If ROOT was installed with the suggested scripts on Fedora, ROOT source files can be copied to a dedicated parent folder `~/Source/root-sources/` via a simple script:
-```
-cd ~/Downloads
-git clone https://github.com/petrstepanov/fedora-scripts && cd ~/fedora-scripts
-chmod +x copy-root-sources.sh
-sh ./copy-root-sources.sh
-```
-
-Next, create a symlink in the Eclipse project tree: 
-```
-cd ~/Development/root-eclipse-project
-ln -s ~/Source/root-geant-sources/
-```
-
-Open Eclipse and go to File → Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project/eclipse` project folder. Click "Finish". 
+Now project is set up and ready to be loaded. Open Eclipse and go to File → Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". 
 
 Next we need to tweak Eclipse project structure in order for the Eclipse Indexer to work correctly:
 
