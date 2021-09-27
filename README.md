@@ -44,7 +44,9 @@ CMake option comes with benefits. CMake can automatically generate cross-platfor
 
 ### Setting up Eclipse project
 
-First, install Eclipse IDE. This process is documented in the [Chapter 6 of my dissertation](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Next, check out the Git repository into the desired location on your computer. I usually keep most of the Git repositories in `~/Development` folder. First we check out the Git repository.
+First, install Eclipse IDE. This process is documented in the [Chapter 6 of my dissertation, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to increase Eclipse heap and indexer cache limits. 
+
+Next, check out the Git repository into the desired location on your computer. I usually keep most of the Git repositories in `~/Development` folder. First we check out the Git repository.
 ```
 mkdir -p ~/Development && cd ~/Development
 git clone https://github.com/petrstepanov/root-eclipse
@@ -94,7 +96,7 @@ We will start from setting up the main Debug configuration for Geant4 `root-ecli
 6. Go to the "Debugger" tab. Uncheck "Stop on startup at:".
 
 ## Compiling and installing with GNU Make
-This option might seem rudimentary. However it gives a good understanding of about building a CERN ROT project. Also this option is useful for running the code if user does not have root permisions on computer.
+This option might seem rudimentary. However it gives a good understanding of building a stand-alone CERN ROOT project. Also this option is useful for running the code if user does not have root permisions on computer. For instance, if working on the remote computer.
 
 GNU makefile is located in the root project folder and named `Makefile-GNU`. Makefile is universal and can be used on macOS and Linux. First, define the executable name on the line 20:
 ```
@@ -113,4 +115,4 @@ Release option is useful on a computer where you do not have administrative perm
 ```
 make Makefile_GNU debug
 ```
-Finally, an executable with debug symbols can be produced. Please not that it is better to compile ROOT framework with debug symbols as well.
+Finally, an executable with debug symbols can be produced. Please note that it is better to compile ROOT framework with debug symbols as well.
