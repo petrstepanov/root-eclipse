@@ -35,16 +35,16 @@ chmod +x ./install-root-latest.sh
 
 If using other linux distribution, refer to the [list of the ROOT dependencies](https://root.cern/install/dependencies/) which I updated and tested on the most popular recent Linux distributions.
 
-Above scripts locate the latest ROOT and Geant versions on the CERN servers, download the framework source code to corresponding `~/Source/` folder, satisfy the dependencies, build the ROOT framework with debug symbols with the most common options turned on, install binaries in `~/Applications/` folder and set up necessary environment variables.
+Above scripts locate the latest ROOT version on the CERN servers, download the framework source code to corresponding `~/Source/` folder, satisfy the dependencies, build the ROOT framework with debug symbols and most common options turned on, install ROOT binaries under `~/Applications/` folder and set up necessary environment variables.
 
-Feel free to reach out to [Petr Stepanov](https://github.com/petrstepanov/) with respect to any issues with the script (or open an Issue in corresponding GitHub repo). Find more information about compilation of CERN ROOT from source [here](https://root.cern/install/build_from_source/).
+Feel free to [reach out to me](https://petrstepanov.com/) with respect to any issues with the script (or open an Issue in corresponding GitHub repo). Find more information about compilation of CERN ROOT from source [here](https://root.cern/install/build_from_source/).
 
 ## CMake approach
 CMake option comes with benefits. CMake can automatically generate cross-platform makefiles, detect external libraries. In particular CMake can pcreate a project structure that can be later opened in IDE of your choice (Eclipse, Visual Studio,…). Then you can enjoy such features like code autocompletion, hilighting and debugging.
 
 ### Setting up Eclipse project
 
-First, install Eclipse IDE. This process is documented in the [Chapter 6 of my dissertation, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to increase Eclipse heap and indexer cache limits. 
+First, install Eclipse IDE. This process is documented in the [Chapter 6 of my dissertation, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to increase Eclipse heap and indexer cache limits because CERN ROOT is a rather resourceful framework. 
 
 Next, check out the Git repository into the desired location on your computer. I usually keep most of the Git repositories in `~/Development` folder. First we check out the Git repository.
 ```
@@ -52,7 +52,7 @@ mkdir -p ~/Development && cd ~/Development
 git clone https://github.com/petrstepanov/root-eclipse
 ```
 
-**Extensive debugging requires accessing ROOT source files in Eclipse project**. In order to access the ROOT source files in Eclipse project it is important to create a symlink under project's `src` folder pointing to the CERN ROOT source files [before building with CMake](https://stackoverflow.com/questions/48509911/cmake-add-subdirectory-vs-include). I outlined a good approach of consolidating CERN ROOT source files from the original ROOT tarball archive [here](https://github.com/petrstepanov/fedora-scripts/blob/main/copy-root-sources.sh). This will work out of the box if you installed ROOT with my scripts above:
+**Extensive debugging requires accessing ROOT source files in Eclipse project**. In order to do it we create a symlink under project's `src` folder pointing to the CERN ROOT source files Tip: it is important to do it [before building project with CMake](https://stackoverflow.com/questions/48509911/cmake-add-subdirectory-vs-include). I outlined a good approach of consolidating CERN ROOT source files from the original ROOT archive [here](https://github.com/petrstepanov/fedora-scripts/blob/main/copy-root-sources.sh). This will work out of the box if you installed ROOT with my scripts above:
 ```
 cd ~/Downloads
 wget -O copy-root-sources.sh https://raw.githubusercontent.com/petrstepanov/fedora-scripts/main/copy-root-sources.sh
@@ -66,21 +66,16 @@ Above code will copy all ROOT sources under `~/Source/root-sources`. Next we sym
 ln -s ~/Source/root-sources/ ~/Development/root-eclipse/src/root-sources
 ```
 
-The out-of-source project generator build is carried out in separate folder located outside of the actual project Git tree. For example, we will create a `root-eclipse-project` folder. Build is initinitiated via following command:
+The out-of-source project generator build is carried out in separate folder located outside of the actual project Git tree. For instance, we will create a `root-eclipse-project` folder. Build is initinitiated via following commands:
 ```
 cd ~/Development
 mkdir root-eclipse-project && cd root-eclipse-project
 cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../root-eclipse
 ```
 
-Now project is set up and ready to be loaded. Open Eclipse and go to File → Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". 
+Now project is set up and ready to be loaded. Open Eclipse and go to File → Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". Eclipse should start to index the project automatically. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour.
 
-Next we need to tweak Eclipse project structure in order for the Eclipse Indexer to work correctly:
-
-* Firstly, Cmake links program source folder to the project twice: as `[Source directory]` and `[Subprojects]`. Indexer is not working correctly when source code is opened in `[Source directory]`. Therefore we will filter out the `[Source Folder]` contents from the build and indexer. Right click the `[Source directory]` node, select "Properties". Go to "Resouce" → "Resource Filters". Click "Add Filter...". Select option buttons "Exclude All", "Files and Folders". In "Filter Details" specify "Name", "matches", "*". Click "Ok", "Apply and Close".
-* Secondly the `root-sources` symlink with framework source code needs to be accessed by the indexer. We need mark it as *Source Folder*. Right click the top most project node. Select `New → Source Folder`. Specify the `root-sources` symlink.
-
-Finally in Eclipse menu select `Prooject → C/C++ Index → Rebuild`. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour.
+**Optional step**. Cmake links program source folder to the project twice: as `[Source directory]` and `[Subprojects]`. For some reaso, indexer is not working correctly when source code is opened in `[Source directory]`. Therefore we will filter out the `[Source Folder]` contents from the build and indexer. Right click the `[Source directory]` node, select "Properties". Go to "Resouce" → "Resource Filters". Click "Add Filter...". Select option buttons "Exclude All", "Files and Folders". In "Filter Details" specify "Name", "matches", "*". Click "Ok", "Apply and Close".
 
 ### Setting up Eclipse debug and run configurations
 
