@@ -52,20 +52,6 @@ mkdir -p ~/Development && cd ~/Development
 git clone https://github.com/petrstepanov/root-eclipse
 ```
 
-**Extensive debugging requires accessing ROOT source files in Eclipse project**. In order to do it we create a symlink under project's `src` folder pointing to the CERN ROOT source files Tip: it is important to do it [before building project with CMake](https://stackoverflow.com/questions/48509911/cmake-add-subdirectory-vs-include). I outlined a good approach of consolidating CERN ROOT source files from the original ROOT archive [here](https://github.com/petrstepanov/fedora-scripts/blob/main/copy-root-sources.sh). This will work out of the box if you installed ROOT with my scripts above:
-```
-cd ~/Downloads
-wget -O copy-root-sources.sh https://raw.githubusercontent.com/petrstepanov/fedora-scripts/main/copy-root-sources.sh
-chmod +x ./copy-root-sources.sh
-./copy-root-sources.sh
-```
-
-Above code will copy all ROOT sources under `~/Source/root-sources`. Next we symlink them under our the project's `src` folder:
-
-```
-ln -s ~/Source/root-sources/ ~/Development/root-eclipse/src/root-sources
-```
-
 The out-of-source project generator build is carried out in separate folder located outside of the actual project Git tree. For instance, we will create a `root-eclipse-project` folder. Build is initinitiated via following commands:
 ```
 cd ~/Development
@@ -73,13 +59,27 @@ mkdir root-eclipse-project && cd root-eclipse-project
 cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../root-eclipse
 ```
 
-Now project is set up and ready to be loaded. Open Eclipse and go to File → Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". Eclipse should start to index the project automatically. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour.
+**Extensive debugging requires accessing ROOT source files in Eclipse project**. In order to do it we create a symlink under project's `src` folder pointing to the CERN ROOT source files. I outlined a good approach of consolidating CERN ROOT source files from the original ROOT archive [here](https://github.com/petrstepanov/fedora-scripts/blob/main/copy-root-geant-sources.sh). This will work out of the box if you installed ROOT with my scripts above:
+```
+cd ~/Downloads
+wget -O copy-root-geant-sources.sh https://raw.githubusercontent.com/petrstepanov/fedora-scripts/main/copy-root-geant-sources.sh
+chmod +x ./copy-root-geant-sources.sh
+./copy-root-geant-sources.sh
+```
 
-**Optional step**. Cmake links program source folder to the project twice: as `[Source directory]` and `[Subprojects]`. For some reaso, indexer is not working correctly when source code is opened in `[Source directory]`. Therefore we will filter out the `[Source Folder]` contents from the build and indexer. Right click the `[Source directory]` node, select "Properties". Go to "Resouce" → "Resource Filters". Click "Add Filter...". Select option buttons "Exclude All", "Files and Folders". In "Filter Details" specify "Name", "matches", "*". Click "Ok", "Apply and Close".
+Above code will copy all ROOT sources under `~/Source/root-sources`. Next we symlink them under our the project's `src` folder:
+```
+cd ~/Development/root-eclipse-project
+ln -s ~/Source/root-sources/
+```
+
+Now project is set up and ready to be loaded. Open Eclipse and go to File → Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". Eclipse should finish indexing the project automatically.
+
+We need mark `root-sources` symlink as *Source Folder* in order for the Eclipse to index ROOT sources. Right click the top most project node. Select `New → Source Folder`. Specify the `root-sources` symlink. Repeat same for `geant4-sources`.
+
+**Tip: do not start indexing the whole project now**. Eclipse will always run indexer after the first program run. Indexing takes quite a time, so we will let Eclipse do it itself later.
 
 ### Setting up Eclipse debug and run configurations
-
-Besides the Geant4 source files compiled into the `root-eclipse` executable, source code contains some ROOT scriupts under the `./draw/` folder. These scripts are designated for plotting and analyzing the output data. Debug configuration for the `root-eclipse` executable as well as the run configurations for the above scripts are needed to be set up in the Eclipse IDE.
 
 We will start from setting up the main Debug configuration for Geant4 `root-eclipse` program.
 
@@ -89,6 +89,12 @@ We will start from setting up the main Debug configuration for Geant4 `root-ecli
 4. Click "Search Project" next to the "C/C++ Application" field. Specify the "root-eclipse" execuable built earlier.
 5. Select "Enable Auto Build"
 6. Go to the "Debugger" tab. Uncheck "Stop on startup at:".
+
+Finally we can run the project in Debug mode. In Eclipse menu select `Run → Debug`. Eclipse will run the project and simultaneously start indexing all ROOT source files. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour. On older computers with SATA hard drives I recommend storing Eclipse workspace folder as well as ROOT and Geant4 sources [on the RAMDISK](https://github.com/patrikx3/ramdisk).
+
+### Eclipse Post-Install Notes
+
+Last but not least. Cmake links program source folder to the project twice: as `[Source directory]` and `[Subprojects]`. In order to avoid confusion we will exclude duplicated files. Press `CTRL+Shift+R` to show the "Open Resource" dialog. Click on three dots on the right. Check "Filter Duplicated Resources".
 
 ## Compiling and installing with GNU Make
 This option might seem rudimentary. However it gives a good understanding of building a stand-alone CERN ROOT project. Also this option is useful for running the code if user does not have root permisions on computer. For instance, if working on the remote computer.
