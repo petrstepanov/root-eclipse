@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/petrstepanov/root-eclipse/main/resources/setup-eclipse-ide-with-cern-root.jpg" width="100%" alt="How to set up and debug CERN ROOT project in Eclipse IDE">
+
 # Template Project for Standalone Build of a CERN ROOT based application
 A template repository for CERN ROOT based C++ project. Project supports CMake and GNU Make builds. Additionaly, with the help of CMake generators project can be easily set up in Eclipse IDE for enchanced debugging and development.
 
