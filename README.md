@@ -46,7 +46,7 @@ CMake option comes with benefits. CMake can automatically generate cross-platfor
 
 ### Setting up Eclipse project
 
-First, install Eclipse IDE. This process is documented in the [Chapter 6 of my dissertation, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to increase Eclipse heap and indexer cache limits because CERN ROOT is a rather resourceful framework. 
+First, install Eclipse IDE. This process is documented in the [Chapter 6 of my dissertation, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to increase Eclipse heap and indexer cache limits because CERN ROOT is a rather resourceful framework. After installation go to Window -> Preferences -> C/C++ -> Indexer. Select "Use the build configuration specified by the project's indexer settings". Otherwise Eclipse will re-index your project every time you launch new run or debug configuration.
 
 Next, check out the Git repository into the desired location on your computer. I usually keep most of the Git repositories in `~/Development` folder. First we check out the Git repository.
 ```
