@@ -46,9 +46,16 @@ CMake option comes with benefits. CMake can automatically generate cross-platfor
 
 ### Setting up Eclipse project
 
-First, install Eclipse IDE. This process is documented in the [Chapter 6 of my dissertation, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to increase Eclipse heap and indexer cache limits because CERN ROOT is a rather resourceful framework. 
-
-After installation go to Window -> Preferences -> C/C++ -> Indexer. Uncheck "Automatically update the index". Otherwise Eclipse will re-index your project every time you launch new run or debug configuration (why?).
+First, install Eclipse IDE. This process is documented in the [Chapter 6, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to perform following post-install steps:
+* Set Eclipse environment variables. In Window > Preferences > C/C++ > Environment specify the `LD_LIBRARY_PATH` variable for shared library include path. Take variable value from Terminal `echo $LD_LIBRARY_PATH`. On macOS this variable is named `DYLD_LIBRARY_PATH`.
+* Increase Eclipse initial and maximum heap size.
+```
+sudo cp /etc/eclipse.ini /etc/eclipse.ini.bak
+sudo sed -i -r "s;Xms[0-9]*m;Xms1024m;" /etc/eclipse.ini
+sudo sed -i -r "s;Xmx[0-9]*m;Xmx4096m;" /etc/eclipse.ini  
+```
+* Increase Eclipse indexer cache limits. In Window > Preferences > C/C++ > Indexer set the "Cache limits" to 50% and 4096MB.
+* Prevent workspace refreshes. in Window > Preferences > General > Workspace. Uncheck "Refresh on access". Otherwise Eclipse may randomly start refreshing the workspace. For for external (non-CDT managed) build tools Eclipse does not provide folder specific Refresh Policy settings. Therefore on a workspace refresh Eclipse will index all project source files including ROOT sources. This takes quite a few time and CPU cycles. Therefore we are trying to avoid it.
 
 Next, check out the Git repository into the desired location on your computer. I usually keep most of the Git repositories in `~/Development` folder. First we check out the Git repository.
 ```
@@ -98,7 +105,9 @@ We will start from setting up the main Debug configuration for Geant4 `root-ecli
 5. Select "Enable Auto Build"
 6. Go to the "Debugger" tab. Uncheck "Stop on startup at:".
 
-Finally we can run the project in Debug mode. In Eclipse menu select `Run → Debug`. Eclipse will run the project and simultaneously start indexing all ROOT source files. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour. On older computers with SATA hard drives I recommend storing Eclipse workspace folder as well as ROOT and Geant4 sources [on the RAMDISK](https://github.com/patrikx3/ramdisk).
+Finally we can run the project in Debug mode. In Eclipse menu select `Run → Debug`. Eclipse will run the project and simultaneously start indexing all ROOT source files. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour. 
+
+Tip: On older computers with SATA hard drives I recommend storing Eclipse workspace folder as well as ROOT and Geant4 sources [on the RAMDISK](https://github.com/patrikx3/ramdisk). Also to prevent moving the RAMDISK back to hard drive run `sudo swapoff -a` after system startup.
 
 ### Eclipse Post-Install Notes
 
