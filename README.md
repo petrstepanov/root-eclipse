@@ -63,7 +63,7 @@ mkdir root-eclipse-project && cd root-eclipse-project
 cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../root-eclipse
 ```
 
-#### Adding ROOT and Geant Sources to Eclipse Project
+#### Adding ROOT Sources to Eclipse Project
 
 CMake will create an Eclipse project and will link ROOT includes (header files) into the project. However, **extensive debugging requires access to Geant and ROOT source files**. An effective way of linking ROOT framework source files to Eclipse project is following:
 
@@ -77,9 +77,11 @@ I wrote a [special Makefile function](https://stackoverflow.com/a/69463832) that
 cmake -G"Eclipse CDT4 - Unix Makefiles" \
       -DCMAKE_BUILD_TYPE=Debug \
       -DROOT_SOURCE_LOCATION="$HOME/ramdisk-persistent/current/root*/" \
+      -DCMAKE_ECLIPSE_GENERATE_LINKED_RESOURCES=OFF \
       ../root-eclipse
 ```
 In the command above the ROOT library path need to be replaced with one on your file system.
+Tip: `-DCMAKE_ECLIPSE_GENERATE_LINKED_RESOURCES=OFF` [disables creation](https://gitlab.kitware.com/cmake/cmake/-/issues/19107) of the `[Subprojects]` folder. This folder leads to double indexing all the source files. Alternative approach would be perform in-source build.
 
 Finaly open Eclipse and go to File > Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". 
 
