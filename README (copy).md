@@ -83,7 +83,27 @@ In the command above the ROOT library path need to be replaced with one on your 
 
 Finaly open Eclipse and go to File > Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". 
 
-After the project is opened, go to menu Project > C/C++ Index > Rebuild. Eclipse will start indexing project. Depending on the speed of your hard drive this may take a few minutes to an hour.
+Tip: Eclipse will automatically start indexing the project. This is a heacy operation - kill this process now. Eclipse will start re-indexing project again after first program run.
+
+**Extensive debugging requires accessing ROOT source files in Eclipse project**. In order to do it we create a symlink under project's `src` folder pointing to the CERN ROOT source files. I outlined a good approach of consolidating CERN ROOT source files from the original ROOT archive [here](https://github.com/petrstepanov/fedora-scripts/blob/main/copy-root-geant-sources.sh). This will work out of the box if you installed ROOT with my scripts above:
+```
+cd ~/Downloads
+wget -O copy-root-geant-sources.sh https://raw.githubusercontent.com/petrstepanov/fedora-scripts/main/copy-root-geant-sources.sh
+chmod +x ./copy-root-geant-sources.sh
+./copy-root-geant-sources.sh
+```
+
+Above code will copy all ROOT sources under `~/Source/root-sources`. Next we symlink them under our the project's `src` folder:
+```
+cd ~/Development/root-eclipse-project
+ln -s ~/Source/root-sources/
+```
+
+Now project is set up and ready to be loaded. Open Eclipse and go to File → Open Projects from File System... Specify the project location in the modal dialog by clicking the "Directory..." button. Locate the `~/Development/root-eclipse-project` project folder. Click "Finish". Eclipse should finish indexing the project automatically.
+
+We need mark `root-sources` symlink as *Source Folder* in order for the Eclipse to index ROOT sources. Right click the top most project node. Select `New → Source Folder`. Specify the `root-sources` symlink. Repeat same for `geant4-sources`.
+
+**Tip: do not start indexing the whole project now**. Eclipse will always run indexer after the first program run. Indexing takes quite a time, so we will let Eclipse do it itself later.
 
 ### Setting up Eclipse debug and run configurations
 
