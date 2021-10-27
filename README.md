@@ -61,7 +61,7 @@ sudo sed -i -r "s;Xmx[0-9]*m;Xmx4096m;" /etc/eclipse.ini
 * Increase Eclipse indexer cache limits. In Window > Preferences > C/C++ > Indexer set the "Cache limits" to 50% and 4096MB.
 * Prevent workspace refreshes. In Window > Preferences > General > Workspace. Uncheck "Refresh on access". Otherwise Eclipse may randomly start refreshing the workspace. For for external (non-CDT managed) build tools Eclipse does not provide folder specific Refresh Policy settings. Therefore on a workspace refresh Eclipse will index all project source files including ROOT sources. This takes quite a few time and CPU cycles. Therefore we are trying to avoid it.
 
-## Generating the Eclipse project
+## Generating Eclipse Project
 
 Check out the Git repository into the desired location on your computer. I usually keep most of the Git repositories in `~/Development` folder.
 ```
@@ -81,11 +81,10 @@ cmake -G"Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ../root-eclipse
 
 More information regarding the CMake Eclipse generator can be found: [on Mantid project page](https://www.mantidproject.org/Setting_up_Eclipse_projects_with_CMake), [on Javier V. Gómez website](https://jvgomez.github.io/pages/how-to-configure-a-cc-project-with-eclipse-and-cmake.html), [on CMake Wiki](https://gitlab.kitware.com/cmake/community/-/wikis/home), [again on CMake Wiki](https://gitlab.kitware.com/cmake/community/-/wikis/doc/editors/Eclipse-CDT4-Generator) and [again on CMake Wiki](https://gitlab.kitware.com/cmake/community/-/wikis/doc/editors/Eclipse-UNIX-Tutorial).
 
-## Adding ROOT Sources to Eclipse Project
+## Attaching ROOT Sources to the Project
 
 By default, CMake project generator creates Eclipse project and links ROOT includes (header files) to the project. However, **extensive debugging requires access to Geant and ROOT source files**. An effective way of linking ROOT framework source files to Eclipse project is following:
-* Download and extract ROOT source packages to local computer. I usually keep all sources under `~/Source/` folder.
-* Optional: unpack and store ROOT sources on the RAMDISK (hard drive in memory) to improve indexing speed on older SATA3 and pre-nvme SSD hard drives.
+* Download and extract ROOT source packages to local computer. I usually keep all sources under `~/Source/` folder. Tip: store ROOT sources on the RAMDISK (hard drive in memory) to improve indexing performance on older hardware (explained later).
 * Symlink all ROOT and Geant4 folders under the project's source folder. Tip: it is better if sources are arranged without nested directory structure. This greatly improves Eclipse indexing speed.
 
 I wrote a [special Makefile function](https://stackoverflow.com/a/69463832) that performs above functuionality. In order to make it work, pass locations of the ROOT sources to `CMakeLists.txt` as CMake variable:
@@ -105,7 +104,7 @@ Finaly open Eclipse and go to File > Open Projects from File System... Specify t
 
 Tip: Eclipse will automatically start indexing the project. Please kill this process because Eclipse will refresh the workspace and re-index all project again after the first launch of the Debug configuration.
 
-## Setting up Eclipse debug and run configurations
+## Setting up Eclipse Debug and Run Configurations
 
 We will start from setting up the main Debug configuration for Geant4 `root-eclipse` program.
 
@@ -118,7 +117,13 @@ We will start from setting up the main Debug configuration for Geant4 `root-ecli
 
 Finally we can run the project in Debug mode. In Eclipse menu select `Run → Debug`. Eclipse will run the project and simultaneously start indexing all ROOT source files. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour. 
 
-Tip: On older computers with SATA hard drives I recommend storing Eclipse workspace folder as well as ROOT and Geant4 sources [on the RAMDISK](https://github.com/patrikx3/ramdisk). Also to prevent moving the RAMDISK back to hard drive run `sudo swapoff -a` after system startup.
+## RAMDISK for Older Computers 
+
+On modern computers with NVMe hard drives Eclipse indexer will crawl ROOT sources fairly quick. However, indexing process can take about one hour on older computers SATA3 interface or magnetic disk drives (HDD). 
+
+Luckily there is a solution. If you have an older computer with decent amount of RAM (8 Gb+) I recommend setting up RAMDISK - a virtual drive partition in computer's RAM. Indexing speed will increase 2-4 times if you store Eclipse workspace folder and ROOT sources [on RAMDISK](https://github.com/patrikx3/ramdisk). 
+
+It is reasonable to disable system swap when using RAMDISK. This prevents the RAMDISK from being moved back onto the hard drive. Disable system swap with `sudo swapoff -a` after startup.
 
 ## [Rudimentary] Compiling and installing with GNU Make
 This option is fairly outdated. I mostly used it for Root v5 and early v6 versions. However it gives a good understanding of building a stand-alone CERN ROOT project. Also this option is useful for running the code if user does not have root permisions on computer. For instance, if working on the remote computer.
