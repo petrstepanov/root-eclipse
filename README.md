@@ -1,9 +1,9 @@
 <img src="https://raw.githubusercontent.com/petrstepanov/root-eclipse/main/resources/setup-eclipse-ide-with-cern-root.jpg" width="100%" alt="How to set up and debug CERN ROOT project in Eclipse IDE">
 
-# Guideline for developing and building a standalone CERN ROOT based application in Eclipse IDE
+# Template project for developing and building a standalone CERN ROOT based application in Eclipse IDE
 This is a template repository for a CERN ROOT based C++ project. Project supports CMake and GNU Make builds. Additionaly, with the help of CMake generators project can be easily set up in Eclipse IDE for enchanced debugging and development.
 
-When writing your own ROOT program, place your sources and headers under the `src` folder. Also make sure you add corresponding class names to the `LinkDef.h` file for proper dictionary deneration.
+When writing your own ROOT program, place your sources and headers under the `src` folder. Also make sure you add corresponding class names to the `LinkDef.h` file for proper dictionary generation.
 
 ## Recommended OS for software development
 
@@ -21,7 +21,7 @@ I consider development of ROOT-based software on macOS more complicated compared
 
 I highly encourage everyone to build ROOT on their personal computer from source. This way many potential issues can be eliminated: mismatch between compiler versions and Python versions installed on your local computer. When compiling ROOT from source, it is possible to turn on a few optional features that are not available in the pre-compiled executable version. Finally, any serious development requires debugging functionality which is only possible when compiling ROOT from source.
 
-Scripts that install build CERN ROOT with debug symbols and all options turned on can be found below. ROOT framework can be installed on pretty much any OS. However, prerequisities -- required list of libraries and their names vary depending on the specific Linux distribution used. I created two versions of scripts that will work for two common personal linux distribution families: Ubuntu-based linux systems and Fedora distributions. Installation instructions are following:
+Scripts that install build CERN ROOT with debug symbols and all options turned on can be found below. ROOT framework can be installed on pretty much any OS. However, prerequisities - required list of libraries and their names vary depending on the specific Linux distribution used. I created two versions of scripts that will work for common personal linux distribution families: Ubuntu-based linux systems and Fedora distributions. Installation instructions are following:
 
 ```
 mkdir -p ~/Downloads && cd ~/Downloads
@@ -39,18 +39,18 @@ chmod +x ./install-root-latest.sh
 
 If using other linux distribution, refer to the [list of the ROOT dependencies](https://root.cern/install/dependencies/). I updated and tested these instructions the most popular recent Linux distributions in 2021.
 
-Above scripts locate the latest ROOT version on the CERN servers, download the framework source code to corresponding `~/Source/` folder, satisfy the dependencies, build the ROOT framework with debug symbols and most common options turned on, install ROOT binaries under `~/Applications/` folder and set up necessary environment variables.
+Above scripts locate latest ROOT version on the CERN servers, download the framework source code to corresponding `~/Source/` folder, satisfy the dependencies, build the ROOT framework with debug symbols and most common options turned on, install ROOT binaries under `~/Applications/` folder and set up necessary environment variables.
 
 Feel free to [reach out](https://petrstepanov.com/) with respect to any issues with the script (or open an Issue in corresponding GitHub repo). Find more information about compilation of CERN ROOT from source [here](https://root.cern/install/build_from_source/).
 
 ## Why use CMake?
-Generally speaking one can build a ROOT standalone executable using standard GNU Makefile approach. I used to do this before and this process is summarized in Chapter 6 of my dissertation. Standard cross-platform (Linux and macOS) GNU makefile is located in this repository and named `Makefile-GNU`.
+Generally speaking one can build a ROOT standalone executable using standard GNU Makefile approach. I used to do this before and this process is summarized in [Chapter 6 of my dissertation](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). For a reference, standard cross-platform (works with Linux and macOS) GNU makefile is located in this repository and named `Makefile-GNU`.
 
 However, CMake approach comes with benefits. CMake can automatically generate cross-platform makefiles and detect external libraries. In particular, CMake includes IDE project generators feature. Once generated, a project workspace that can be instantly opened in IDE of your choice (Eclipse, Visual Studio,…). This allows such features like code autocompletion, hilighting and debugging.
 
 ## Trivial build
 
-If your goal is simply build a standalone CERN ROOT based executable, you can check out the project, place your code in `main.cpp` file and carry out a basic CMake out-of-source build:
+If your goal is to simply build a standalone CERN ROOT based executable, you can check out the project, place your code in `main.cpp` file and carry out a basic CMake out-of-source build:
 ```
 mkdir -p ~/Development && cd ~/Development
 git clone https://github.com/petrstepanov/root-eclipse
@@ -59,22 +59,24 @@ cmake ../root-eclipse
 make 
 sudo make install
 ```
+Depending on your program code, extra ROOT libraries may need to be specified in `CMakeLists.txt` with CMake `list(APPEND LIB_NAMES "<root-library-name>")` command. List of available extra ROOT libraries [can be found here](https://cliutils.gitlab.io/modern-cmake/chapters/packages/ROOT.html#the-right-way-targets). 
+
 Next in this article we will discuss a more important aspect. Namely, how to set up a CERN ROOT based project for extensive development in Eclipse IDE.
 
 ## Installing and Tweaking the Eclipse IDE
 
-Refer to [original documantation](https://wiki.eclipse.org/Eclipse/Installation) to install Eclipse IDE. On Fedora linux it is a one-liner `sudo dnf -y install eclipse`.
+Refer to [original documantation](https://wiki.eclipse.org/Eclipse/Installation) to install Eclipse IDE. On Fedora linux it is a one-liner `sudo dnf -y install eclipse`. After installation is complete, perform following steps:
 * Install CDT plugin. In menu Help > Install New Software... select "All Available Sites". Under "Programming Languages" select "C/C++ Development Tools". Restart Eclipse.
 * Activate "C/C++" perspective in Window > Perspective > Open.
 * Set Eclipse environment variables. In Window > Preferences > C/C++ > Environment specify the `LD_LIBRARY_PATH` variable for shared library include path. Take variable value from Terminal's `echo $LD_LIBRARY_PATH` output.
-* Increase Eclipse initial and maximum heap size.
+* Increase Eclipse initial and maximum heap size. Run following commands in Terminal, but double check that your `/etc/eclipse.ini` location first:
 ```
 sudo cp /etc/eclipse.ini /etc/eclipse.ini.bak
 sudo sed -i -r "s;Xms[0-9]*m;Xms1024m;" /etc/eclipse.ini
 sudo sed -i -r "s;Xmx[0-9]*m;Xmx4096m;" /etc/eclipse.ini  
 ```
 * Increase Eclipse indexer cache limits. In Window > Preferences > C/C++ > Indexer set the "Cache limits" to 50% and 4096MB.
-* Prevent workspace refreshes. In Window > Preferences > General > Workspace. Uncheck "Refresh on access". Otherwise Eclipse may randomly start refreshing the workspace. For for external (non-CDT managed) build tools Eclipse does not provide folder specific Refresh Policy settings. Therefore on a workspace refresh Eclipse will index all project source files including ROOT sources. This takes quite a few time and CPU cycles. Therefore we are trying to avoid it.
+* Prevent workspace refreshes. In Window > Preferences > General > Workspace. Uncheck "Refresh on access". Otherwise Eclipse may randomly start refreshing the workspace. For external (non-CDT managed) build tools Eclipse does not provide folder specific Refresh Policy settings. Therefore, on a workspace refresh event Eclipse will re-index all project source files including ROOT sources. This takes quite a few time and CPU cycles. We are trying to avoid it.
 
 ## Generating Eclipse Project
 
