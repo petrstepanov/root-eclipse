@@ -102,7 +102,7 @@ More information regarding the CMake Eclipse generator can be found: [on Mantid 
 
 By default, CMake project generator creates Eclipse project and links ROOT includes (header files) to the project. However, **extensive debugging requires access to Geant and ROOT source files**. A legitamate way of doing this would be linking the original ROOT source folder as a library in our project's CMakeLists.txt. But if we do so, project build will require building the ROOT from source again. Having multiple CERN ROOT based projects on your computer means that one would have to build ROOT from source for every project.
 
-Below I propose an effective way (sort of a hack) that works for me. Instead we will symlink all the ROOT sources into the project tree, but not include them in the build. Steps are following:
+Below I propose an effective way (sort of a hack) that works for me. Instead we will symlink all the ROOT sources into the project tree, but not include them in the build. This way source navigation and debug source lookup will work just fine. Steps are following:
 * Download and extract ROOT source packages to local computer. I usually keep all sources under `~/Source/` folder. Tip: store ROOT sources on the RAMDISK (hard drive in memory) to improve indexing performance on older hardware (explained later).
 * Symlink all ROOT and Geant4 folders under the project's source folder. Tip: it is better if sources are arranged without nested directory structure. This greatly improves Eclipse indexing speed.
 
