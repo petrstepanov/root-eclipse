@@ -4,4 +4,10 @@
 #pragma link off all functions;
 #pragma link C++ nestedclasses;
 
+// Below list class names that require dictionary deneration, e.g.
+// GUI classes with slots and signals, custom RooFit PDF classes.
+
+// #pragma link C++ class MyMainFrame;
+// #pragma link C++ class MyCustomPdf;
+
 #endif
