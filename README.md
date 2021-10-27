@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/petrstepanov/root-eclipse/main/resources/setup-eclipse-ide-with-cern-root.jpg" width="100%" alt="How to set up and debug CERN ROOT project in Eclipse IDE">
 
-# Template Eclipse Project for Standalone Build of a CERN ROOT based application
-A template repository for CERN ROOT based C++ project. Project supports CMake and GNU Make builds. Additionaly, with the help of CMake generators project can be easily set up in Eclipse IDE for enchanced debugging and development.
+# Guideline for developing and building a standalone CERN ROOT based application in Eclipse IDE
+This is a template repository for a CERN ROOT based C++ project. Project supports CMake and GNU Make builds. Additionaly, with the help of CMake generators project can be easily set up in Eclipse IDE for enchanced debugging and development.
 
 When writing your own ROOT program, place your sources and headers under the `src` folder. Also make sure you add corresponding class names to the `LinkDef.h` file for proper dictionary deneration.
 
@@ -47,6 +47,19 @@ Feel free to [reach out](https://petrstepanov.com/) with respect to any issues w
 Generally speaking one can build a ROOT standalone executable using standard GNU Makefile approach. I used to do this before and this process is summarized in Chapter 6 of my dissertation. Standard cross-platform (Linux and macOS) GNU makefile is located in this repository and named `Makefile-GNU`.
 
 However, CMake approach comes with benefits. CMake can automatically generate cross-platform makefiles and detect external libraries. In particular, CMake includes IDE project generators feature. Once generated, a project workspace that can be instantly opened in IDE of your choice (Eclipse, Visual Studio,…). This allows such features like code autocompletion, hilighting and debugging.
+
+## Trivial build
+
+If your goal is simply build a standalone CERN ROOT based executable, you can check out the project, place your code in `main.cpp` file and carry out a basic CMake out-of-source build:
+```
+mkdir -p ~/Development && cd ~/Development
+git clone https://github.com/petrstepanov/root-eclipse
+mkdir root-eclipse-build && cd root-eclipse-build
+cmake ../root-eclipse
+make 
+sudo make install
+```
+Next in this article we will discuss a more important aspect. Namely, how to set up a CERN ROOT based project for extensive development in Eclipse IDE.
 
 ## Installing and Tweaking the Eclipse IDE
 
