@@ -48,10 +48,12 @@ Generally speaking one can build a ROOT standalone executable using standard GNU
 
 However, CMake approach comes with benefits. CMake can automatically generate cross-platform makefiles and detect external libraries. In particular, CMake includes IDE project generators feature. Once generated, a project workspace that can be instantly opened in IDE of your choice (Eclipse, Visual Studio,…). This allows such features like code autocompletion, hilighting and debugging.
 
-## Setting up Project in Eclipse IDE
+## Installing and Tweaking the Eclipse IDE
 
-First, install Eclipse IDE. This process is documented in the [Chapter 6, pp. 87](https://petrstepanov.com/static/petr-stepanov-dissertation-latest.pdf). Make sure to perform following post-install steps:
-* Set Eclipse environment variables. In Window > Preferences > C/C++ > Environment specify the `LD_LIBRARY_PATH` variable for shared library include path. Take variable value from Terminal `echo $LD_LIBRARY_PATH`. On macOS this variable is named `DYLD_LIBRARY_PATH`.
+Refer to [original documantation](https://wiki.eclipse.org/Eclipse/Installation) to install Eclipse IDE. On Fedora linux it is a one-liner `sudo dnf -y install eclipse`.
+* Install CDT plugin. In menu Help > Install New Software... select "All Available Sites". Under "Programming Languages" select "C/C++ Development Tools". Restart Eclipse.
+* Activate "C/C++" perspective in Window > Perspective > Open.
+* Set Eclipse environment variables. In Window > Preferences > C/C++ > Environment specify the `LD_LIBRARY_PATH` variable for shared library include path. Take variable value from Terminal's `echo $LD_LIBRARY_PATH` output.
 * Increase Eclipse initial and maximum heap size.
 ```
 sudo cp /etc/eclipse.ini /etc/eclipse.ini.bak
