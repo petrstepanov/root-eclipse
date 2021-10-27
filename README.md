@@ -69,7 +69,7 @@ Refer to [original documantation](https://wiki.eclipse.org/Eclipse/Installation)
 * Install CDT plugin. In menu Help > Install New Software... select "All Available Sites". Under "Programming Languages" select "C/C++ Development Tools". Restart Eclipse.
 * Activate "C/C++" perspective in Window > Perspective > Open.
 * Set Eclipse environment variables. In Window > Preferences > C/C++ > Environment specify the `LD_LIBRARY_PATH` variable for shared library include path. Take variable value from Terminal's `echo $LD_LIBRARY_PATH` output.
-* Increase Eclipse initial and maximum heap size. Run following commands in Terminal, but double check that your `/etc/eclipse.ini` location first. Here we increase heap to 4096 MB:
+* Increase Eclipse initial and maximum heap size. Run following commands in Terminal to increase heap to 4GB, but ensure your correct `/etc/eclipse.ini` location (may vary):
 ```
 sudo cp /etc/eclipse.ini /etc/eclipse.ini.bak
 sudo sed -i -r "s;Xms[0-9]*m;Xms1024m;" /etc/eclipse.ini
