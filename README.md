@@ -15,6 +15,8 @@ Red Hat provides a free operating system named Fedora that is based on RHEL but 
 
 In my point of view, similarities between RHEL, CentOS and Fedora strongly lead towards selecting Fedora as a distribution of choice for the software development of the ROOT-based programs for scientific application. However, any linux distribution should work just fine for development of a C++ ROOT project in Eclipse.
 
+I consider development of ROOT-based software on macOS more complicated compared to Linux. Apple introduced code signing procedures that I was never able to figure out. From that point in time I am developing C++ programs on Linux.
+
 ## Installing CERN ROOT on personal computer
 
 I highly encourage everyone to build ROOT on their personal computer from source. This way many potential issues can be eliminated: mismatch between compiler versions and Python versions installed on your local computer. When compiling ROOT from source, it is possible to turn on a few optional features that are not available in the pre-compiled executable version. Finally, any serious development requires debugging functionality which is only possible when compiling ROOT from source.
