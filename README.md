@@ -1,11 +1,11 @@
 <img src="https://raw.githubusercontent.com/petrstepanov/root-eclipse/main/resources/setup-eclipse-ide-with-cern-root.jpg" width="100%" alt="How to set up and debug CERN ROOT project in Eclipse IDE">
 
-# Template project for developing a CERN ROOT based application in Eclipse IDE
+# Template Project for Developing a CERN ROOT Based Application in Eclipse IDE
 This is a template repository for a CERN ROOT based C++ project. Project supports CMake and GNU Make standalone builds. Additionaly, with the help of CMake generators project can be easily set up in Eclipse IDE for enchanced debugging and development.
 
 When writing your own ROOT program, place your sources and headers under the `src` folder. Also make sure you add corresponding class names to the `LinkDef.h` file for proper dictionary generation.
 
-## Recommended OS for software development
+## Recommended OS for Software Development
 
 Red Hat Enterprise Linux (RHEL) is a gold standard in linux family operating systems for commercial market. RHEL is open-source distribution that comes with paid support. Within the past decade scinetific community (organizations like CERN or Fermilab and JLab) were utilizing a free RHEL clone named CentOS. CentOS is originally a RHEL fork, a community driven project that established good relationships with Red Hat headquaters and even received funding and support since 2014. 
 
@@ -17,7 +17,7 @@ In my point of view, similarities between RHEL, CentOS and Fedora strongly lead 
 
 I consider development of ROOT-based software on macOS more complicated compared to Linux. Apple introduced code signing procedures that I was never able to figure out. From that point in time I am developing C++ programs on Linux.
 
-## Installing CERN ROOT on personal computer
+## Installing CERN ROOT on Personal Computer
 
 I highly encourage everyone to build ROOT on their personal computer from source. This way many potential issues can be eliminated: mismatch between compiler versions and Python versions installed on your local computer. When compiling ROOT from source, it is possible to turn on a few optional features that are not available in the pre-compiled executable version. Finally, any serious development requires debugging functionality which is only possible when compiling ROOT from source.
 
@@ -48,7 +48,7 @@ Generally speaking one can build a ROOT standalone executable using standard GNU
 
 However, CMake approach comes with benefits. CMake can automatically generate cross-platform makefiles and detect external libraries. In particular, CMake includes IDE project generators feature. Once generated, a project workspace that can be instantly opened in IDE of your choice (Eclipse, Visual Studio,…). This allows such features like code autocompletion, hilighting and debugging.
 
-## Trivial build
+## Trivial Build
 
 If your goal is to simply build a standalone CERN ROOT based executable, you can check out the project, place your code in `main.cpp` file and carry out a basic CMake out-of-source build:
 ```
