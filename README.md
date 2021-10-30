@@ -27,7 +27,7 @@ Scripts that install build CERN ROOT with debug symbols and all options turned o
 mkdir -p ~/Downloads && cd ~/Downloads
 
 # For Ubuntu-based systems use:
-wget -O install-root-latest.sh https://raw.githubusercontent.com/petrstepanov/ubuntu-scripts/main/install-root-latest.sh
+wget -O install-root-latest.sh https://raw.githubusercontent.com/petrstepanov/ubuntu-scripts/master/install-root-latest.sh
 
 # For Fedora linux use:
 wget -O install-root-latest.sh https://raw.githubusercontent.com/petrstepanov/fedora-scripts/main/install-root-latest.sh
@@ -65,15 +65,15 @@ Next in this article we will discuss a more important aspect. Namely, how to set
 
 ## Installing and Tweaking the Eclipse IDE
 
-Refer to [original documantation](https://wiki.eclipse.org/Eclipse/Installation) to install Eclipse IDE. On Fedora linux it is a one-liner `sudo dnf -y install eclipse`. After installation is complete, perform following steps:
+Refer to the [original documentation](https://wiki.eclipse.org/Eclipse/Installation) to install Eclipse IDE. On Fedora linux it is a one-liner `sudo dnf -y install eclipse`. After installation is complete, perform following steps:
 * Install CDT plugin. In menu Help > Install New Software... select "All Available Sites". Under "Programming Languages" select "C/C++ Development Tools". Restart Eclipse.
 * Activate "C/C++" perspective in Window > Perspective > Open.
 * Set Eclipse environment variables. In Window > Preferences > C/C++ > Environment specify the `LD_LIBRARY_PATH` variable for shared library include path. Take variable value from Terminal's `echo $LD_LIBRARY_PATH` output.
-* Increase Eclipse initial and maximum heap size. Run following commands in Terminal to increase heap to 4GB, but ensure your correct `/etc/eclipse.ini` location (may vary):
+* Increase Eclipse initial and maximum heap size. Run following commands in Terminal to increase heap to 4GB. Please note, location of the `eclipse.ini` file on your computer can be different from the one below.
 ```
-sudo cp /etc/eclipse.ini /etc/eclipse.ini.bak
-sudo sed -i -r "s;Xms[0-9]*m;Xms1024m;" /etc/eclipse.ini
-sudo sed -i -r "s;Xmx[0-9]*m;Xmx4096m;" /etc/eclipse.ini  
+sudo cp /usr/lib/eclipse/eclipse.ini /usr/lib/eclipse/eclipse.ini.bak
+sudo sed -i -r "s;Xms[0-9]*m;Xms256m;" /usr/lib/eclipse/eclipse.ini
+sudo sed -i -r "s;Xmx[0-9]*m;Xmx2048m;" /usr/lib/eclipse/eclipse.ini 
 ```
 * Increase Eclipse indexer cache limits. In Window > Preferences > C/C++ > Indexer set the "Cache limits" to 50% and 4096MB.
 * Prevent workspace refreshes. In Window > Preferences > General > Workspace. Uncheck "Refresh on access". Otherwise Eclipse may randomly start refreshing the workspace. For external (non-CDT managed) build tools Eclipse does not provide folder specific Refresh Policy settings. Therefore, on a workspace refresh event Eclipse will re-index all project source files including ROOT sources. This takes quite a few time and CPU cycles. We are trying to avoid it.
