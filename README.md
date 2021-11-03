@@ -151,13 +151,13 @@ int main(int argc, char **argv) {
 
 	...
 }
-``` 
+```
 
 For the build to succeed, we need to ensure a few more criteria:
 
-* As opposed to running your ROOT script with Cling interpreter, standalone build requires to include headers `#include <...>` to be explicitly defined in the `src/main.cpp` file for every class used in the program.
+* As opposed to running your ROOT script with Cling interpreter, standalone build requires to include headers `#include <...>` to be explicitly defined in the `src/yourRootScript.C` file for every class used in the program.
 * Depending on your script code, extra ROOT libraries may need to be specified in `CMakeLists.txt` with CMake `list(APPEND LIB_NAMES "<root-library-name>")` command. List of available extra ROOT libraries [can be found here](https://cliutils.gitlab.io/modern-cmake/chapters/packages/ROOT.html#the-right-way-targets).
-* Some of the ROOT classes require library generation. These are: GUI classes that utilize signals and slots functionality; classes with implemented ClassDef and ClassImp directives (that use functions like ClassName(), InheritsFrom() etc...); custom RooFit PDF classes inherited from RooAbsPdf, etc. For every such class, add a corresponding line in the `src/LinkDef.h` file: `#pragma link C++ class MyClassThatRequiresLibrary+`.
+* Some of the ROOT classes require generation of dictionary and shared library. These are: GUI classes that utilize signals and slots functionality; classes with implemented ClassDef and ClassImp directives (that use functions like ClassName(), InheritsFrom() etc...); custom RooFit PDF classes inherited from RooAbsPdf, etc. For every such class, add a corresponding line in the `src/LinkDef.h` file: `#pragma link C++ class MyClassThatRequiresLibrary+`.
 * If you want to add more C++ and header files to the project, place them under the `src/` folder. Every time a new file is added, `rebuild_cache` target needs to be invoked from the Project Explorer > Build Targets window.
 
 Now we are ready to debug your ROOT script. Save changes in all modified source files. In Eclipse menu select Project > Build All (or run the `all` target under the Build Targets in the "Project Explorer" window). Finally, to start debugging run the previously created debug configuration in Run > Debug menu item.
