@@ -1,6 +1,6 @@
 # Template Project for Debuging CERN ROOT Scripts in Eclipse IDE
 
-**Pleaase refer to the main article published on the [CERN ROOT blog](https://root.cern/blog/debuging-root-scripts-in-eclipse)**.
+**Please refer to the main article published on the [CERN ROOT blog](https://root.cern/blog/debuging-root-scripts-in-eclipse)**.
 
 This is a template repository for a CERN ROOT based C++ project. Project supports CMake and GNU Make standalone builds. With thee help of CMake IDE generator project can be easily set up in Eclipse C++ Development Tools (CDT) Integrated Desktop Environment (IDE) for development and enchaned debugging.
 
