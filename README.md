@@ -1,9 +1,8 @@
-<img src="https://raw.githubusercontent.com/petrstepanov/root-eclipse/main/resources/setup-eclipse-ide-with-cern-root.jpg" width="100%" alt="How to set up and debug CERN ROOT project in Eclipse IDE">
+# Template Project for Debuging a CERN ROOT Scripts in Eclipse IDE
 
-# Template Project for Developing a CERN ROOT Based Application in Eclipse IDE
-This is a template repository for a CERN ROOT based C++ project. Project supports CMake and GNU Make standalone builds. Additionaly, with the help of CMake generators project can be easily set up in Eclipse IDE for enchanced debugging and development.
+**Pleaase refer to the main article published on the [CERN ROOT blog](https://root.cern/blog/debuging-root-scripts-in-eclipse)**.
 
-When writing your own ROOT program, place your sources and headers under the `src` folder. Also make sure you add corresponding class names to the `LinkDef.h` file for proper dictionary generation.
+This is a template repository for a CERN ROOT based C++ project. Project supports CMake and GNU Make standalone builds. With thee help of CMake IDE generator project can be easily set up in Eclipse C++ Development Tools (CDT) Integrated Desktop Environment (IDE) for development and enchaned debugging.
 
 ## Recommended OS for Software Development
 
@@ -135,6 +134,36 @@ We will start from setting up the main Debug configuration for Geant4 `root-ecli
 6. Go to the "Debugger" tab. Uncheck "Stop on startup at:".
 
 Finally we can run the project in Debug mode. In Eclipse menu select `Run → Debug`. Eclipse will run the project and simultaneously start indexing all ROOT source files. Depending on the speed of your hard drive and memory indexing will require from several minutes to about an hour. 
+
+## Debugging Your Personal Script
+
+Now that our template project is set up and built, we can integrate your ROOT script into it. Copy your ROOT script(s) and place them in next in the `src/` project folder. Include your ROOT script in the `src/main.cpp` file and call your script entry point function from `main()` in `src/main.cpp`:
+
+```
+// Include your script file
+#include <yourRootScript.C>
+
+int main(int argc, char **argv) {
+	...
+
+	// Call your ROOT script entry function
+	yourRootScript();
+
+	...
+}
+``` 
+
+For the build to succeed, we need to ensure a few more criteria:
+
+* As opposed to running your ROOT script with Cling interpreter, standalone build requires to include headers `#include <...>` to be explicitly defined in the `src/main.cpp` file for every class used in the program.
+* Depending on your script code, extra ROOT libraries may need to be specified in `CMakeLists.txt` with CMake `list(APPEND LIB_NAMES "<root-library-name>")` command. List of available extra ROOT libraries [can be found here](https://cliutils.gitlab.io/modern-cmake/chapters/packages/ROOT.html#the-right-way-targets).
+* Some of the ROOT classes require library generation. These are: GUI classes that utilize signals and slots functionality; classes with implemented ClassDef and ClassImp directives (that use functions like ClassName(), InheritsFrom() etc...); custom RooFit PDF classes inherited from RooAbsPdf, etc. For every such class, add a corresponding line in the `src/LinkDef.h` file: `#pragma link C++ class MyClassThatRequiresLibrary+`.
+* If you want to add more C++ and header files to the project, place them under the `src/` folder. Every time a new file is added, `rebuild_cache` target needs to be invoked from the Project Explorer > Build Targets window.
+
+Now we are ready to debug your ROOT script. Save changes in all modified source files. In Eclipse menu select Project > Build All (or run the `all` target under the Build Targets in the "Project Explorer" window). Finally, to start debugging run the previously created debug configuration in Run > Debug menu item.
+
+
+
 
 ## RAMDISK for Older Computers 
 
