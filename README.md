@@ -138,11 +138,12 @@ Finally we can run the project in Debug mode. In Eclipse menu select `Run → De
 
 ## RAMDISK for Older Computers 
 
-On modern computers with NVMe hard drives Eclipse indexer will crawl ROOT sources fairly quick. However, indexing process can take about one hour on older computers SATA3 interface or magnetic disk drives (HDD). 
+On modern computers with NVMe hard drives Eclipse indexer will crawl ROOT sources fairly quickly. However, the indexing process can take about one hour on older computers SATA3 interface or magnetic disk drives (HDD). If you are interested 
 
-Luckily there is a solution. If you have an older computer with decent amount of RAM (8 Gb+) I recommend setting up RAMDISK - a virtual drive partition in computer's RAM. Indexing speed will increase 2-4 times if you store Eclipse workspace folder and ROOT sources [on RAMDISK](https://github.com/patrikx3/ramdisk). 
+Luckily there is a solution. If you have an older computer with a minimum of 8 GB of Random Access Memory (RAM) I recommend setting up RAMDISK - a virtual drive partition in the computer's RAM. Eclipse indexer speed will increase 2-4 times. Refer to [this GitHub repository](https://github.com/patrikx3/ramdisk) to set up RAMDISK on your Linux computer. Store your Eclipse workspace folder as well as ROOT sources on the RAMDISK.
 
-It is reasonable to disable system swap when using RAMDISK. This prevents the RAMDISK from being moved back onto the hard drive. Disable system swap with `sudo swapoff -a` after startup.
+It is reasonable to disable system swap when using RAMDISK. This prevents the RAMDISK from being moved back onto the hard drive's swap partition. Disable system swap with `sudo swapoff -a` command after fresh system startup.
+
 
 ## [Rudimentary] Compiling and installing with GNU Make
 This option is fairly outdated. I mostly used it for Root v5 and early v6 versions. However it gives a good understanding of building a stand-alone CERN ROOT project. Also this option is useful for running the code if user does not have root permisions on computer. For instance, if working on the remote computer.
