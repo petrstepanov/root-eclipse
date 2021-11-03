@@ -1,4 +1,4 @@
-# Template Project for Debuging a CERN ROOT Scripts in Eclipse IDE
+# Template Project for Debuging CERN ROOT Scripts in Eclipse IDE
 
 **Pleaase refer to the main article published on the [CERN ROOT blog](https://root.cern/blog/debuging-root-scripts-in-eclipse)**.
 
