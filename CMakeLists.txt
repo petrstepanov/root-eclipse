@@ -51,6 +51,11 @@ function(attachExternalSources librarySourceLocation folderName)
 		${librarySourceLocation}/*.cc
 	)
 
+	# Exclude interpreter/llvm from ROOT sources
+	# https://stackoverflow.com/questions/6145041/makefile-filter-out-strings-containing-a-character
+	FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
+	$(call FILTER_OUT,"llvm",$libSources)
+
 	message(STATUS "Symlinking sources into\n   \"${CMAKE_SOURCE_DIR}/${folderName}\"\n   Please wait...")
 	foreach(source ${libSources})
 		# Obtain source filename
