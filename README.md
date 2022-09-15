@@ -31,3 +31,5 @@ For the build to succeed, we need to satisfy following criteria:
 * If adding new C++ and header files to the project, simply place them under the `src/` folder. CMake will find them automatically.
 
 Now your ROOT script is transformed into a ROOT-based program that is ready to be set up in Eclipse IDE with CMake4Eclipse plugin.
+
+> Feel free to continue reading setup instructions of a CERN ROOT-based project in Eclipse IDE on [the ROOT blog](https://root.cern/blog/debuging-root-scripts-in-eclipse/).
