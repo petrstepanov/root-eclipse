@@ -1,27 +1,33 @@
 Debugging CERN ROOT scripts and ROOT-based programs in Eclipse IDE
 ==================================================================
 
-> **NOTE:** this post was originally published in Oct 2021 and outlined a setup of a ROOT-based project in Eclipse IDE based on the [Eclipse CDT4 CMake generator](https://cmake.org/cmake/help/latest/generator/Eclipse%20CDT4.html) functionality. However, [CMake4eclipse](https://github.com/15knots/cmake4eclipse) plugin provides a better integration of a ROOT-based project in Eclipse. Therefore post is updated to reflect the new approach. Former notes can be found here.
+![Eclipse with CERN ROOT](https://root.cern/assets/images/setup-eclipse-ide-with-cern-root.jpg)
 
-ROOT and Geant4 frameworks are written in C++, a language with complete manual control over the memory. Therefore, development and execution of your ROOT script (or Geant4 program) may sometimes lead to a crash providing minimal information in the stack trace. ROOT framework does not provide out-of-the-box solutions for debugging scripts. Hence, a question about debugging ROOT scripts now and then arises in the ROOT community.
+> **NOTE:** this post was originally published in Oct 2021 and outlined a setup of a ROOT-based project in Eclipse IDE based on the [Eclipse CDT4 CMake generator](https://cmake.org/cmake/help/latest/generator/Eclipse%20CDT4.html) functionality. However, [CMake4eclipse](https://github.com/15knots/cmake4eclipse) plugin provides a better integration of a ROOT-based project in Eclipse. Therefore post is updated to reflect the new approach. Former notes can be found [here](https://github.com/petrstepanov/root-eclipse/blob/main/md/root-post-cmake-generator.md).
 
-Generally speaking, one does not need a special development environment to invoke a debugger on a ROOT script. Users can simply invoke the GNU Debugger (GDB) on the debug the root.exe binary:
+ROOT framework is written in C++, a language with complete manual control over the memory. Therefore, development and execution of your ROOT script (or Geant4 program) may sometimes lead to a crash providing minimal information in the stack trace. ROOT framework does not provide out-of-the-box solutions for debugging scripts. Hence, a question about debugging ROOT scripts now and then arises in the ROOT community.
+
+Generally speaking, one does not need a special development environment to invoke a debugger on a ROOT script. Users can simply invoke the GNU Debugger (GDB) on the debug the `root.exe` binary:
+```
 gdb --args root.exe -l -b -q yourRootMacro.C
+```
 
 Similarly, GDB can be used for debugging stand-alone ROOT and Geant4-based programs. However, this debugging experience is carried out in the Terminal and lacks user interface and many useful features.
-In this article, we outline an approach for robust debugging of CERN ROOT scripts, ROOT and Geant4-based programs. We will utilize Eclipse CDT (C/C++ Development Tooling) Integrated Desktop Environment (IDE), a free software coupled with the GNU debugger (GDB):
 
+In this article, we outline an **approach for robust debugging of CERN ROOT scripts**, ROOT and Geant4-based programs. We will utilize Eclipse CDT (C/C++ Development Tooling) Integrated Desktop Environment (IDE), a free software coupled with the GNU debugger (GDB):
 
-Eclipse indexer scans the object-oriented hierarchy of the library classes, allowing easy navigation between C++ sources and headers, quick lookup of method overrides, code highlighting and many more.
-GDB allows pausing program execution at any time. Computer memory, object instances, variable values .
+* Eclipse indexer scans the object-oriented hierarchy of the library classes, allowing easy navigation between C++ sources and headers, quick lookup of method overrides, code highlighting and many more.
+* GDB allows pausing program execution at any time. Computer memory, object instances, variable values .
 
 Additionally, the current approach allows users to have ROOT and Geant4 frameworks built in both - Release and Debug modes installed on the same computer. Debug binaries are great for development, allowing memory analysis and efficient development. Release builds - on the other hand - can be optimized for robust execution of the program and may work up to 10 times faster.
 
-A few words about the operating system (OS). In this post, we will consider the setup on Linux-based systems. A similar approach may be replicated to macOS with GNU toolchain, but will require a code signing procedure. Windows is a different story.
+A few words about the operating system (OS). In this post, we will consider the setup on Linux-based systems. A similar approach may be replicated to macOS with GNU toolchain, but will require a [code signing procedure](https://gist.github.com/mike-myers-tob/9a6013124bad7ff074d3297db2c98247). Windows is a different story.
 
 To accomplish the setup of the development environment, list of topics is :
-Install Eclipse IDE on your computer. Eclipse is an all-in-one development solution that automates many things: source highlighting and formatting, invokes the CMake build, lets users set breakpoints in code, attaches the debugger to the executable, and many more.
-Get a copy of the ROOT/Geant4 source code on your computer. Once attached to the project, this allows easy inspection and navigation between your script (or program) and ROOT/Geant4 source files within the IDE user interface. It also allows modification of the frameworks’ source files while debugging your program, which makes it easy to fix bugs and issue Pull Requests to the ROOT/Geant4 open-source code.
+
+* **Install Eclipse IDE on your computer**. Eclipse is an all-in-one development solution that automates many things: source highlighting and formatting, invokes the CMake build, lets users set breakpoints in code, attaches the debugger to the executable, and many more.
+
+* **Get a copy of the ROOT/Geant4 source code on your computer**. Once attached to the project, this allows easy inspection and navigation between your script (or program) and ROOT/Geant4 source files within the IDE user interface. It also allows modification of the frameworks’ source files while debugging your program, which makes it easy to fix bugs and issue Pull Requests to the original ROOT/Geant4 open-source code.
 Compile ROOT/Geant4 with debug symbols. This provides the ability to set up breakpoints in your code and original ROOT (or Geant4) source files, inspect variables, access data types and object members in the program source code.
 Optional. Convert ROOT script into standalone program. ROOT scripts designed to run with C++ interpreter (line-by-line), need to be transformed into a compiled C++ program with common “main()” function.   
 Set up your ROOT-based program in Eclipse IDE. During the main project setup, ROOT and Geant4 projects are marked as its references. This automatically triggers the rebuild and re-install of corresponding ROOT (and Geant4) components prior to the main project build. Additionally, ROOT and Geant4 indexer databases become shared with your project.

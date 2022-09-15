@@ -9,5 +9,6 @@
 
 // #pragma link C++ class MyMainFrame;
 // #pragma link C++ class MyCustomPdf;
+// #pragma link C++ class AnyOtherClass  // That utilizes ROOT Run Time Type Information and object I/O
 
 #endif
